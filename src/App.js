@@ -29,7 +29,7 @@ class ModeForm extends React.Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <label>
-          Pick your favorite flavor:
+          Select The mode
           <select value={this.state.value} onChange={this.handleChange}>
             <option value={1}>Timer</option>
             <option value={2}>Pom</option>
@@ -41,40 +41,30 @@ class ModeForm extends React.Component {
   }
 }
 
+let cron;
+
 class Pomodoro extends React.Component {
   constructor(props){
     super(props)
+    let mode = localStorage.getItem("Pomodoro_Mode") || 1;
     this.state = {
-      mode: localStorage.getItem("Pomodoro_Mode") || 1,
+      mode: mode,
+      running: false,
+      started: false,
+      clock: ((mode === 1) ? 0 : 1500),
+      time: ((mode === 1) ? "00 : 00" : "25 : 00"),
+
     }
     // this.handleModeChange = this.handleModeChange.bind(this);
   }
   handleModeChange = (newMode) => {
-    this.setState({mode: newMode,});
-  }
+    this.Pause();
+    this.setState({mode: newMode,running: false, started: false, 
+      clock: (newMode === 1) ? 0 : 1500,
+      time: (newMode === 1) ? "00 : 00" : "25 : 00",
+    });
 
-  render(){
-    return (
-      <div>      
-        <ModeForm currentMode={this.state.mode} handleModeChange={(newMode) => this.handleModeChange(newMode)}/>
-        <Timer mode={this.state.mode}/>
-        {this.state.mode}
-      </div>
-    )
   }
-}
-let cron;
-class Timer extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      running: false,
-      started: false,
-      clock: ((this.props.mode === 1) ? 0 : 1500),
-      time: ((this.props.mode === 1) ? "00 : 00" : "25 : 00"),
-    }
-  }
-
   handleClick(){
     if(this.state.running){
       this.Pause();
@@ -86,16 +76,15 @@ class Timer extends React.Component {
       return;
     }
   }
-
   Reset(){
-    if(this.props.mode === 1)
-      this.setState({time: "00 : 00", clock: 0, running: false});
+    if(this.state.mode === 1)
+      this.setState({time: "00 : 00", clock: 0, running: false, started: false});
     else
-      this.setState({time: "25 : 00", clock: 0, running: false});
+      this.setState({time: "25 : 00", clock: 1500, running: false, started: false});
     this.Pause();
   }
   Update(){
-    if(this.props.mode === 1)
+    if(this.state.mode === 1)
       this.setState({clock: (this.state.clock + 1), });
     else
       this.setState({clock: (this.state.clock - 1), });
@@ -117,11 +106,28 @@ class Timer extends React.Component {
   }
   render(){
     return (
+      <div>      
+        <ModeForm
+          currentMode={this.state.mode} 
+          handleModeChange={(newMode) => this.handleModeChange(newMode)}
+         />
+        <Timer 
+          mode={this.state.mode}
+          handleClick={() => this.handleClick()} 
+          time={this.state.time}
+        />
+      </div>
+    )
+  }
+}
+class Timer extends React.Component {
+  render(){
+    return (
       <div>
-      <Clock time={this.state.time} onClick={() => this.handleClick()}/>
+      <Clock time={this.props.time} onClick={() => this.props.handleClick()}/>
       {
-        !this.state.running && this.state.started
-        ? <Reset reset={()=> this.Reset()}/>
+        !this.props.running && this.props.started
+        ? <Reset reset={()=> this.props.Reset()}/>
         : <p>Click on the timer to begin.</p>
       }
       </div>
