@@ -51,7 +51,6 @@ class Pomodoro extends React.Component {
 			running: false,
 			started: false,
 			clock: mode === 1 ? 0 : 1500,
-			time: mode === 1 ? "00 : 00" : "25 : 00",
 		};
 		// this.handleModeChange = this.handleModeChange.bind(this);
 	}
@@ -62,8 +61,8 @@ class Pomodoro extends React.Component {
 			running: false,
 			started: false,
 			clock: newMode === 1 ? 0 : 1500,
-			time: newMode === 1 ? "00 : 00" : "25 : 00",
 		});
+		localStorage.setItem("Pomodoro_Mode", newMode);
 	};
 	handleClick() {
 		if (this.state.running) {
@@ -81,14 +80,12 @@ class Pomodoro extends React.Component {
 	Reset() {
 		if (this.state.mode === 1)
 			this.setState({
-				time: "00 : 00",
 				clock: 0,
 				running: false,
 				started: false,
 			});
 		else
 			this.setState({
-				time: "25 : 00",
 				clock: 1500,
 				running: false,
 				started: false,
@@ -98,20 +95,7 @@ class Pomodoro extends React.Component {
 	Update() {
 		if (this.state.mode === 1) this.setState({ clock: this.state.clock + 1 });
 		else this.setState({ clock: this.state.clock - 1 });
-		let values = Array(2).fill(0);
-		let clock = this.state.clock;
-
-		while (Math.floor(clock / 60) !== 0) {
-			values[1] += 1;
-			clock -= 60;
-		}
-		values[0] = clock;
-
-		let toReturn =
-			(values[1] > 9 ? values[1].toString() : "0" + values[1].toString()) +
-			" : " +
-			(values[0] > 9 ? values[0].toString() : "0" + values[0].toString());
-		this.setState({ time: toReturn });
+		// this.setState({ time: toReturn });
 	}
 	Pause() {
 		clearInterval(cron);
@@ -127,28 +111,25 @@ class Pomodoro extends React.Component {
 				<Timer
 					mode={this.state.mode}
 					handleClick={() => this.handleClick()}
-					time={this.state.time}
+					clock={this.state.clock}
 				/>
 			</div>
 		);
 	}
 }
-class Timer extends React.Component {
-	render() {
-		return (
-			<div>
-				<Clock
-					time={this.props.time}
-					onClick={() => this.props.handleClick()}
-				/>
-				{!this.props.running && this.props.started ? (
-					<Reset reset={() => this.props.Reset()} />
-				) : (
-					<p>Click on the timer to begin.</p>
-				)}
-			</div>
-		);
-	}
+
+function Timer(props) {
+	let time = clockConverstion(props.clock);
+	return (
+		<div>
+			<Clock time={time} onClick={() => props.handleClick()} />
+			{!props.running && props.started ? (
+				<Reset reset={() => props.Reset()} />
+			) : (
+				<p>Click on the timer to begin.</p>
+			)}
+		</div>
+	);
 }
 
 function Clock(props) {
@@ -166,6 +147,7 @@ function Clock(props) {
 		</p>
 	);
 }
+
 function Reset(props) {
 	const mystyle = {
 		color: "white",
@@ -187,4 +169,20 @@ function Reset(props) {
 	);
 }
 
+let clockConverstion = (clock) => {
+	let values = Array(2).fill(0);
+
+	while (Math.floor(clock / 60) !== 0) {
+		values[1] += 1;
+		clock -= 60;
+	}
+	values[0] = clock;
+
+	let toReturn =
+		(values[1] > 9 ? values[1].toString() : "0" + values[1].toString()) +
+		" : " +
+		(values[0] > 9 ? values[0].toString() : "0" + values[0].toString());
+
+	return toReturn;
+};
 export default App;
