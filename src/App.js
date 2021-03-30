@@ -52,7 +52,8 @@ class Pomodoro extends React.Component {
 			started: false,
 			clock: mode === 1 ? 0 : 1500,
 		};
-		// this.handleModeChange = this.handleModeChange.bind(this);
+		// this.handleModeChange = this.handleModeChangoe.bind(this);
+		this.Quit = this.Quit.bind(this);
 	}
 	handleModeChange = (newMode) => {
 		this.Pause();
@@ -77,7 +78,7 @@ class Pomodoro extends React.Component {
 			return;
 		}
 	}
-	Reset() {
+	Quit() {
 		if (this.state.mode === 1)
 			this.setState({
 				clock: 0,
@@ -112,6 +113,9 @@ class Pomodoro extends React.Component {
 					mode={this.state.mode}
 					handleClick={() => this.handleClick()}
 					clock={this.state.clock}
+					started={this.state.started}
+					running={this.state.running}
+					quit={this.Quit}
 				/>
 			</div>
 		);
@@ -123,10 +127,14 @@ function Timer(props) {
 	return (
 		<div>
 			<Clock time={time} onClick={() => props.handleClick()} />
-			{!props.running && props.started ? (
-				<Reset reset={() => props.Reset()} />
+			{props.started ? (
+				props.running ? (
+					<p>Focus</p>
+				) : (
+					<Quit quit={() => props.quit()} />
+				)
 			) : (
-				<p>Click on the timer to begin.</p>
+				<p>Click on the timer to start</p>
 			)}
 		</div>
 	);
@@ -148,7 +156,7 @@ function Clock(props) {
 	);
 }
 
-function Reset(props) {
+function Quit(props) {
 	const mystyle = {
 		color: "white",
 		backgroundColor: "#202135",
@@ -162,8 +170,8 @@ function Reset(props) {
 	};
 	return (
 		<div>
-			<button style={mystyle} onClick={() => props.reset()}>
-				Reset
+			<button style={mystyle} onClick={() => props.quit()}>
+				Quit
 			</button>
 		</div>
 	);
@@ -185,4 +193,5 @@ let clockConverstion = (clock) => {
 
 	return toReturn;
 };
+
 export default App;
