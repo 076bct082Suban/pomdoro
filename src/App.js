@@ -56,7 +56,22 @@ class Pomodoro extends React.Component {
 		// this.handleModeChange = this.handleModeChangoe.bind(this);
 		this.Quit = this.Quit.bind(this);
 	}
-	async sendPom() {}
+	async sendPom() {
+		let obj = this.state.pom;
+		if (obj && Object.keys(obj).length === 0 && obj.constructor === Object) {
+			return;
+		}
+		await fetch("http://localhost:5000/api/pomodoro", {
+			method: "POST",
+			mode: "cors",
+			credentials: "same-origin",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(obj),
+		});
+	}
+
 	handleModeChange = (newMode) => {
 		this.Pause();
 		this.setState({
@@ -99,17 +114,23 @@ class Pomodoro extends React.Component {
 		}
 	}
 	Quit() {
+		let pom = this.state.pom;
+		pom.pauseEvent();
+		this.sendPom().then(() => console.log("POM sent"));
+
 		if (this.state.mode === 1)
 			this.setState({
 				clock: 0,
 				running: false,
 				started: false,
+				pom: {},
 			});
 		else
 			this.setState({
 				clock: 1500,
 				running: false,
 				started: false,
+				pom: {},
 			});
 		this.Pause();
 	}
