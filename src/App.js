@@ -51,10 +51,12 @@ class Pomodoro extends React.Component {
 			running: false,
 			started: false,
 			clock: mode === 1 ? 0 : 1500,
+			pom: {},
 		};
 		// this.handleModeChange = this.handleModeChangoe.bind(this);
 		this.Quit = this.Quit.bind(this);
 	}
+	async sendPom() {}
 	handleModeChange = (newMode) => {
 		this.Pause();
 		this.setState({
@@ -67,14 +69,32 @@ class Pomodoro extends React.Component {
 	};
 	handleClick() {
 		if (this.state.running) {
+			// Pause
 			this.Pause();
+			let pom = this.state.pom;
+			pom.pauseEvent();
+			this.setState({ pom: pom });
 			return;
 		} else {
+			// Start / Continue Pomodoro
+
+			// New few lines do not work without this check idk why.
+			let madePom = false; // A check to see if i make a new pom in the next if statement
+			if (!this.state.started) {
+				this.setState({ pom: new Pom(), started: true });
+				madePom = true;
+			}
 			this.Pause();
 			cron = setInterval(() => {
 				this.Update();
 			}, 1000);
-			this.setState({ running: true, started: true });
+			if (!madePom) {
+				// Maybe i can't query for state after i set it to a new one
+				let pom = this.state.pom;
+				pom.continueEvent();
+				this.setState({ pom: pom });
+			}
+			this.setState({ running: true });
 			return;
 		}
 	}
@@ -194,4 +214,24 @@ let clockConverstion = (clock) => {
 	return toReturn;
 };
 
+class Pom {
+	constructor() {
+		this.started = new Date();
+		this.interval = [];
+		this.lastAction = new Date();
+		this.running = true;
+	}
+	pauseEvent() {
+		let pauseTime = new Date();
+		this.interval.push([this.lastAction, pauseTime]);
+		this.lastAction = pauseTime;
+		this.running = false;
+	}
+	continueEvent() {
+		if (this.running === false) {
+			this.lastAction = new Date();
+		}
+	}
+}
+// async function sendPom() {}
 export default App;
