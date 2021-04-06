@@ -136,7 +136,13 @@ class Pomodoro extends React.Component {
 	}
 	Update() {
 		if (this.state.mode === 1) this.setState({ clock: this.state.clock + 1 });
-		else this.setState({ clock: this.state.clock - 1 });
+		else {
+			let finished = false;
+			if (this.state.clock === 1) finished = true;
+			this.setState({ clock: this.state.clock - 1 });
+
+			if (finished) this.Quit();
+		}
 		// this.setState({ time: toReturn });
 	}
 	Pause() {
@@ -238,13 +244,13 @@ let clockConverstion = (clock) => {
 class Pom {
 	constructor() {
 		this.started = new Date();
-		this.interval = [];
+		this.intervals = [];
 		this.lastAction = new Date();
 		this.running = true;
 	}
 	pauseEvent() {
 		let pauseTime = new Date();
-		this.interval.push([this.lastAction, pauseTime]);
+		this.intervals.push([this.lastAction, pauseTime]);
 		this.lastAction = pauseTime;
 		this.running = false;
 	}
