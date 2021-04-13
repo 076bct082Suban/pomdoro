@@ -2,7 +2,9 @@ import React from "react";
 import ModeForm from "./ModeForm";
 import Timer from "./Timer";
 import Pom from "./Pom";
+
 let cron;
+
 export default class Pomodoro extends React.Component {
 	constructor(props) {
 		super(props);

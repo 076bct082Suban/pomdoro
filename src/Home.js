@@ -1,6 +1,7 @@
 import React from "react";
 import Pomodoro from "./Pomodoro";
 import stats_icon from "./images/stats_icon.svg";
+import { useHistory } from "react-router-dom";
 // import "css/Home.css";
 export default class Home extends React.Component {
 	render() {
@@ -14,9 +15,16 @@ export default class Home extends React.Component {
 }
 
 function TopBar(props) {
+	let history = useHistory();
 	return (
 		<div>
-			<img src={stats_icon} alt="icon for stats" width="8%" height="8%" />
+			<img
+				onClick={() => history.push("/stats")}
+				src={stats_icon}
+				alt="icon for stats"
+				width="8%"
+				height="8%"
+			/>
 		</div>
 	);
 }
