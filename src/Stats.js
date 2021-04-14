@@ -22,9 +22,6 @@ class MyComponent extends React.Component {
 
 	componentDidMount() {
 		console.log(this.chartReference); // returns a Chart.js instance reference
-	}
-
-	render() {
 		let data = {};
 		fetch("http://localhost:5000/api/data")
 			.then((res) => res.json())
@@ -49,11 +46,13 @@ class MyComponent extends React.Component {
 					],
 				};
 				this.setState({ data: data });
-				let lineChart = this.chartReference.chartInstance;
-				lineChart.update();
+				let barChart = this.chartReference.chartInstance;
+				barChart.update();
 				console.log(this.state.data);
 			});
+	}
 
+	render() {
 		return (
 			<Bar
 				ref={(reference) => (this.chartReference = reference)}
