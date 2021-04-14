@@ -8,7 +8,7 @@ let cron;
 export default class Pomodoro extends React.Component {
 	constructor(props) {
 		super(props);
-		let mode = localStorage.getItem("Pomodoro_Mode") || 1;
+		let mode = parseInt(localStorage.getItem("Pomodoro_Mode") || 1);
 		this.state = {
 			mode: mode,
 			running: false,
@@ -36,15 +36,21 @@ export default class Pomodoro extends React.Component {
 	}
 
 	handleModeChange = (newMode) => {
+		const mode = parseInt(newMode);
 		this.Pause();
 		this.setState({
-			mode: newMode,
+			mode: mode,
 			running: false,
 			started: false,
-			clock: newMode === 1 ? 0 : 1500,
+			clock: mode === 1 ? 0 : 1500,
 		});
-		localStorage.setItem("Pomodoro_Mode", newMode);
+		localStorage.setItem("Pomodoro_Mode", mode);
 	};
+
+	handleClass() {
+		// TODO
+	}
+
 	handleClick() {
 		if (this.state.running) {
 			// Pause
