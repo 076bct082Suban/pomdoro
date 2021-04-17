@@ -3,6 +3,7 @@ export default function Timer(props) {
 	return (
 		<div>
 			<Clock time={time} onClick={() => props.handleClick()} />
+			Current task
 			{props.started ? (
 				props.running ? (
 					<p>Focus</p>
@@ -24,6 +25,8 @@ function Clock(props) {
 		fontFamily: "Arial",
 		cursor: "pointer",
 		fontSize: "4em",
+		marginTop: "1em",
+		marginBottom: "0.5em",
 	};
 	return (
 		<p style={mystyle} onClick={props.onClick}>

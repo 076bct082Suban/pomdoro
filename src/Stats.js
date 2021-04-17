@@ -1,20 +1,33 @@
 import React from "react";
-import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
+import "./css/Stats.css";
 export default class Stats extends React.Component {
 	render() {
 		return (
 			<div>
-				<h1>STAts</h1>
-				<MyComponent />
+				<div id="stats">
+					<h1>STAts</h1>
+					<LineGraph />
+				</div>
 			</div>
 		);
 	}
 }
-class MyComponent extends React.Component {
+class LineGraph extends React.Component {
 	constructor(props) {
 		super(props);
 		this.chartReference = React.createRef();
-		this.options = {};
+		this.options = {
+			scales: {
+				yAxes: [
+					{
+						ticks: {
+							beginAtZero: true,
+						},
+					},
+				],
+			},
+		};
 		this.state = {
 			data: {},
 		};
@@ -39,9 +52,7 @@ class MyComponent extends React.Component {
 							data: info,
 							backgroundColor: "rgba(255,99,132,0.2)",
 							borderColor: "rgba(255,99,132,1)",
-							borderWidth: 1,
-							hoverBackgroundColor: "rgba(255,99,132,0.4)",
-							hoverBorderColor: "rgba(255,99,132,1)",
+							fill: false,
 						},
 					],
 				};
@@ -54,12 +65,11 @@ class MyComponent extends React.Component {
 
 	render() {
 		return (
-			<Bar
+			<Line
 				ref={(reference) => (this.chartReference = reference)}
 				data={this.state.data}
 				options={this.options}
-				width={400}
-				height={200}
+				barPercentage={0.5}
 			/>
 		);
 	}
