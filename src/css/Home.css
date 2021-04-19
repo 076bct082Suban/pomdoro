@@ -2,9 +2,9 @@
 	background-color: cyan;
 	align-items: center;
 	display: flex;
-	height: 2em;
 	width: 100%;
 	justify-content: space-between;
+	min-height: 7vh;
 }
 .icon {
 	width: 1.2em;
@@ -16,7 +16,7 @@
 }
 
 #pomodoro {
-	min-height: 90vh;
+	min-height: 93vh;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
