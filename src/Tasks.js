@@ -166,7 +166,12 @@ function Taskbar(props) {
 			<div className="task-bar">
 				<input type="checkbox" className="task-checkbox" />
 				{props.task.getValue()}
-				<img src={crossButton} alt="cross button" className="cross-button" />
+				<img
+					src={crossButton}
+					alt="cross button"
+					onClick={() => props.clearActiveTask()}
+					className="cross-button"
+				/>
 				<img src={moreOptions} alt="more options" className="more-options" />
 			</div>
 		</>

@@ -1,5 +1,4 @@
 import React from "react";
-import Tasks from "./Tasks";
 
 export default function Timer(props) {
 	let style_p = {
@@ -23,11 +22,6 @@ export default function Timer(props) {
 			) : (
 				<p>Click on the timer to start</p>
 			)}
-			<Tasks
-				handleTaskSet={(task) => props.handleTaskSet(task)}
-				task={props.task}
-				clearActiveTask={() => props.clearActiveTask()}
-			/>
 		</div>
 	);
 }

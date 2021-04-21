@@ -2,7 +2,7 @@ import React from "react";
 import ModeForm from "./ModeForm";
 import Timer from "./Timer";
 import Pom from "./Pom";
-import { Taskbar } from "./Tasks";
+import Tasks, { Taskbar } from "./Tasks";
 
 let cron;
 
@@ -159,6 +159,11 @@ export default class Pomodoro extends React.Component {
 					activeTask={this.state.activeTask}
 					clearActiveTask={() => this.clearActiveTask()}
 					quit={this.Quit}
+				/>
+				<Tasks
+					handleTaskSet={(task) => this.handleTaskSet(task)}
+					task={this.state.task}
+					clearActiveTask={() => this.clearActiveTask()}
 				/>
 			</div>
 		);
