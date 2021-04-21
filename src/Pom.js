@@ -5,7 +5,6 @@ export default class Pom {
 		this.lastAction = new Date();
 		this.running = true;
 		this.task = "";
-		this.project = "";
 	}
 	pauseEvent() {
 		let pauseTime = new Date();

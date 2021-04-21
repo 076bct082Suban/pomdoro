@@ -2,6 +2,7 @@ import React from "react";
 import ModeForm from "./ModeForm";
 import Timer from "./Timer";
 import Pom from "./Pom";
+import { Taskbar } from "./Tasks";
 
 let cron;
 
@@ -15,15 +16,27 @@ export default class Pomodoro extends React.Component {
 			started: false,
 			clock: mode === 1 ? 0 : 1500,
 			pom: {},
+			task: {},
+			activeTask: false,
 		};
 		// this.handleModeChange = this.handleModeChangoe.bind(this);
 		this.Quit = this.Quit.bind(this);
+		this.handleTaskSet = this.handleTaskSet.bind(this);
+		this.clearActiveTask = this.clearActiveTask.bind(this);
 	}
 	async sendPom() {
 		let obj = this.state.pom;
 		if (obj && Object.keys(obj).length === 0 && obj.constructor === Object) {
 			return;
 		}
+		let task = this.state.task;
+		let taskID;
+		if (task && Object.keys(task).length === 0 && task.constructor === Object) {
+			taskID = "";
+		} else {
+			taskID = task.getID();
+		}
+		obj.task = taskID;
 		await fetch("http://localhost:5000/api/pomodoro", {
 			method: "POST",
 			mode: "cors",
@@ -47,8 +60,12 @@ export default class Pomodoro extends React.Component {
 		localStorage.setItem("Pomodoro_Mode", mode);
 	};
 
-	handleClass() {
+	handleTaskSet(task) {
 		// TODO
+		this.setState({ task: task, activeTask: true });
+	}
+	clearActiveTask() {
+		this.setState({ task: {}, activeTask: false });
 	}
 
 	handleClick() {
@@ -125,12 +142,22 @@ export default class Pomodoro extends React.Component {
 					currentMode={this.state.mode}
 					handleModeChange={(newMode) => this.handleModeChange(newMode)}
 				/>
+				{this.state.activeTask && (
+					<Taskbar
+						task={this.state.task}
+						clearActiveTask={() => this.clearActiveTask()}
+					/>
+				)}
 				<Timer
 					mode={this.state.mode}
 					handleClick={() => this.handleClick()}
+					handleTaskSet={(task) => this.handleTaskSet(task)}
 					clock={this.state.clock}
 					started={this.state.started}
 					running={this.state.running}
+					task={this.state.task}
+					activeTask={this.state.activeTask}
+					clearActiveTask={() => this.clearActiveTask()}
 					quit={this.Quit}
 				/>
 			</div>
