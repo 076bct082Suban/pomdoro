@@ -262,7 +262,6 @@ export default class Pomodoro extends React.Component {
 					quit={this.Quit}
 				/>
 				<Tasks
-					// task={this.state.task}
 					taskValue={this.state.taskValue}
 					handleValueChange={(event) => this.handleValueChange(event)}
 					handleTaskSubmit={(event) => this.handleTaskSubmit(event)}

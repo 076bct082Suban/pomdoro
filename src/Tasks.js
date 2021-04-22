@@ -19,7 +19,7 @@ function Tasks(props) {
 			<div>
 				{props.unfinishedTasks.map((task, key) => (
 					<TaskRow
-						// topbarTask={props.task}
+						topBarTask={props.task}
 						task={task}
 						key={key}
 						handleClick={props.handleCheckboxClick}
@@ -32,6 +32,9 @@ function Tasks(props) {
 }
 
 function TaskRow(props) {
+	if (props.topBarTask.id === props.task.id) {
+		return <div></div>;
+	}
 	return (
 		<div>
 			<div className="task-row">
@@ -82,4 +85,5 @@ function Taskbar(props) {
 		</>
 	);
 }
+
 export { Tasks, Taskbar };
