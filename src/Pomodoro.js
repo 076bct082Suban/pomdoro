@@ -2,7 +2,8 @@ import React from "react";
 import ModeForm from "./ModeForm";
 import Timer from "./Timer";
 import Pom from "./Pom";
-import Tasks, { Taskbar } from "./Tasks";
+import Task from "./Task";
+import { Tasks, Taskbar } from "./Tasks";
 
 let cron;
 
@@ -17,12 +18,22 @@ export default class Pomodoro extends React.Component {
 			clock: mode === 1 ? 0 : 1500,
 			pom: {},
 			task: {},
+			taskValue: "",
+			unfinishedTasks: [],
 			activeTask: false,
 		};
 		// this.handleModeChange = this.handleModeChangoe.bind(this);
 		this.Quit = this.Quit.bind(this);
 		this.handleTaskSet = this.handleTaskSet.bind(this);
 		this.clearActiveTask = this.clearActiveTask.bind(this);
+
+		this.handleTaskSubmit = this.handleTaskSubmit.bind(this);
+		this.handleValueChange = this.handleValueChange.bind(this);
+		this.handleTaskUpdate = this.handleTaskUpdate.bind(this);
+		// this.handleTaskClick = this.handleClick.bind(this);
+	}
+	componentDidMount() {
+		this.handleTaskUpdate();
 	}
 	async sendPom() {
 		let obj = this.state.pom;
@@ -67,7 +78,96 @@ export default class Pomodoro extends React.Component {
 	clearActiveTask() {
 		this.setState({ task: {}, activeTask: false });
 	}
+	handleTaskUpdate() {
+		console.log("Updating");
+		let tasks = [];
+		fetch("http://localhost:5000/api/tasks")
+			.then((res) => res.json())
+			.then((result) => {
+				console.log(result);
+				result.forEach((object) => {
+					const task = new Task(
+						object.id,
+						object.value,
+						object.tags,
+						object.completed
+					);
+					tasks.push(task);
+				});
+				this.setState({ unfinishedTasks: tasks });
+			});
+	}
+	handleTaskSubmit(event) {
+		event.preventDefault();
+		const value = this.state.taskValue;
+		const tags = [];
+		const completed = false;
+		this.setState({ taskValue: "" });
+		console.log("preparing to send task");
+		fetch("http://localhost:5000/api/tasks", {
+			method: "POST",
+			mode: "cors",
+			credentials: "same-origin",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ value: value, tags: tags, completed: completed }),
+		})
+			.then((res) => res.json())
+			.then((result) => {
+				console.log(`task sent, message: ${result.message}`);
 
+				const task = new Task(
+					result.task._id,
+					result.task.value,
+					result.task.tags,
+					result.task.completed
+				);
+
+				this.setState({
+					unfinishedTasks: [...this.state.unfinishedTasks, task],
+					taskValue: "",
+				});
+			});
+	}
+	handleValueChange(event) {
+		this.setState({ taskValue: event.target.value });
+	}
+	handleCheckboxClick(id) {
+		// hands the checkbox click event
+		console.log(id);
+
+		if (id === this.state.task.id) {
+			this.clearActiveTask();
+		}
+		// Fixes the checkmark issue
+		let tasks = [];
+		let changedState;
+		this.state.unfinishedTasks.forEach((task) => {
+			if (id !== task.id) {
+				tasks.push(task);
+			} else {
+				changedState = task.changeStatus();
+				tasks.push(task);
+			}
+		});
+		this.setState({ unfinishedTasks: tasks });
+		fetch("http://localhost:5000/api/tasks", {
+			method: "PUT",
+			mode: "cors",
+			credentials: "same-origin",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				id: id,
+				type: "checkbox",
+				completed: typeof changedState !== undefined ? changedState : false,
+			}),
+		}).then(() => this.handleTaskUpdate());
+	}
+
+	// Pomodoro functions
 	handleClick() {
 		if (this.state.running) {
 			// Pause
@@ -146,6 +246,7 @@ export default class Pomodoro extends React.Component {
 					<Taskbar
 						task={this.state.task}
 						clearActiveTask={() => this.clearActiveTask()}
+						handleClick={(id) => this.handleCheckboxClick(id)}
 					/>
 				)}
 				<Timer
@@ -161,9 +262,15 @@ export default class Pomodoro extends React.Component {
 					quit={this.Quit}
 				/>
 				<Tasks
+					// task={this.state.task}
+					taskValue={this.state.taskValue}
+					handleValueChange={(event) => this.handleValueChange(event)}
+					handleTaskSubmit={(event) => this.handleTaskSubmit(event)}
+					unfinishedTasks={this.state.unfinishedTasks}
 					handleTaskSet={(task) => this.handleTaskSet(task)}
 					task={this.state.task}
 					clearActiveTask={() => this.clearActiveTask()}
+					handleCheckboxClick={(id) => this.handleCheckboxClick(id)}
 				/>
 			</div>
 		);
