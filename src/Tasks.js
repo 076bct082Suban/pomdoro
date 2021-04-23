@@ -1,8 +1,8 @@
 import React from "react";
 import playButton from "./images/playButton.svg";
-import moreOptions from "./images/moreOptions.svg";
 import crossButton from "./images/crossButton.svg";
 import "./css/tasks.css";
+import MoreOptions from "./MoreOptions";
 
 function Tasks(props) {
 	return (
@@ -44,8 +44,10 @@ function TaskRow(props) {
 					checked={props.task.completed}
 					onChange={() => props.handleClick(props.task.getID())}
 				></input>
-				{props.task.getValue()}
 
+				<p className="value">{props.task.getValue()}</p>
+
+				<MoreOptions task={props.task} />
 				<img
 					className={"play-button"}
 					alt={"Start task button "}
@@ -54,8 +56,6 @@ function TaskRow(props) {
 						props.handleTaskSet(props.task);
 					}}
 				/>
-
-				<img src={moreOptions} alt="more options" className="more-options" />
 			</div>
 		</div>
 	);
@@ -73,14 +73,14 @@ function Taskbar(props) {
 						props.clearActiveTask();
 					}}
 				/>
-				{props.task.getValue()}
+				<p className="value">{props.task.getValue()}</p>
+				<MoreOptions task={props.task} />
 				<img
 					src={crossButton}
 					alt="cross button"
 					onClick={() => props.clearActiveTask()}
 					className="cross-button"
 				/>
-				<img src={moreOptions} alt="more options" className="more-options" />
 			</div>
 		</>
 	);

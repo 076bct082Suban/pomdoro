@@ -1,25 +1,29 @@
 .task-row {
 	border: 1px solid black;
 	margin: 0.1em;
-	display: flexbox;
+	display: flex;
+	justify-content: space-between;
 	width: 20em;
 	align-items: center;
 	font-size: 0.8em;
 	padding: 5px;
 }
-
-.play-button {
-	width: 1.2em;
-	height: 1.2em;
-	float: right;
-	margin-left: 0.2em;
+.task-checkbox {
+	flex: 1;
+	vertical-align: middle;
+	float: left;
+	position: relative;
+	height: 1.5em;
 }
 
-.more-options {
+.value {
+	flex: 10;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.play-button {
 	float: right;
-	vertical-align: center;
-	margin-left: 0.1em;
-	margin-right: 0.1em;
+	margin-left: 0.2em;
 }
 
 .cross-button {
@@ -28,18 +32,12 @@
 	margin-left: 0.2em;
 }
 
-.task-checkbox {
-	vertical-align: middle;
-	float: left;
-	position: relative;
-	height: 1.5em;
-}
-
 .task-bar {
 	margin-top: 0.2em;
 	font-size: 0.8em;
 	border: 1px solid black;
-	display: flexbox;
+	display: flex;
+	justify-content: space-between;
 	align-items: center;
 	padding: 5px;
 }
