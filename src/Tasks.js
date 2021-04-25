@@ -24,6 +24,8 @@ function Tasks(props) {
 						key={key}
 						handleClick={props.handleCheckboxClick}
 						handleTaskSet={(task) => props.handleTaskSet(task)}
+						handleTaskValueUpdate={props.handleTaskValueUpdate}
+						updateTags={props.updateTags}
 					/>
 				))}
 			</div>
@@ -47,7 +49,13 @@ function TaskRow(props) {
 
 				<p className="value">{props.task.getValue()}</p>
 
-				<MoreOptions task={props.task} />
+				<MoreOptions
+					task={props.task}
+					handleTaskValueUpdate={props.handleTaskValueUpdate}
+					className="more-options"
+					updateTags={props.updateTags}
+				/>
+
 				<img
 					className={"play-button"}
 					alt={"Start task button "}

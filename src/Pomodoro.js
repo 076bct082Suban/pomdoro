@@ -21,6 +21,7 @@ export default class Pomodoro extends React.Component {
 			taskValue: "",
 			unfinishedTasks: [],
 			activeTask: false,
+			tags: [],
 		};
 		// this.handleModeChange = this.handleModeChangoe.bind(this);
 		this.Quit = this.Quit.bind(this);
@@ -30,10 +31,13 @@ export default class Pomodoro extends React.Component {
 		this.handleTaskSubmit = this.handleTaskSubmit.bind(this);
 		this.handleValueChange = this.handleValueChange.bind(this);
 		this.handleTaskUpdate = this.handleTaskUpdate.bind(this);
+		this.handleTaskValueUpdate = this.handleTaskValueUpdate.bind(this);
+		this.updateTags = this.updateTags.bind(this);
 		// this.handleTaskClick = this.handleClick.bind(this);
 	}
 	componentDidMount() {
 		this.handleTaskUpdate();
+		this.getTags();
 	}
 	async sendPom() {
 		let obj = this.state.pom;
@@ -166,7 +170,25 @@ export default class Pomodoro extends React.Component {
 			}),
 		}).then(() => this.handleTaskUpdate());
 	}
+	handleTaskValueUpdate(task) {
+		const tasks = this.state.unfinishedTasks;
+		const index = tasks.findIndex((obj) => task.id === obj.id);
+		console.log(index);
+		console.log(task);
 
+		tasks[index] = new Task(task.id, task.value, task.tags, task.completed);
+		this.setState({ unfinishedTasks: tasks });
+	}
+
+	getTags() {
+		fetch("http://localhost:5000/api/tags").then((res) =>
+			res.json().then((result) => this.setState({ tags: result.tags }))
+		);
+	}
+
+	updateTags(tag) {
+		this.state.tags.push(tag);
+	}
 	// Pomodoro functions
 	handleClick() {
 		if (this.state.running) {
@@ -270,6 +292,8 @@ export default class Pomodoro extends React.Component {
 					task={this.state.task}
 					clearActiveTask={() => this.clearActiveTask()}
 					handleCheckboxClick={(id) => this.handleCheckboxClick(id)}
+					handleTaskValueUpdate={(task) => this.handleTaskValueUpdate(task)}
+					updateTags={(tag) => this.updateTags(tag)}
 				/>
 			</div>
 		);

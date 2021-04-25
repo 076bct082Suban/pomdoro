@@ -3,15 +3,23 @@ import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import "./css/moreOptions.css";
 import img from "./images/moreOptions.svg";
+import MultiSelectOptions from "./MultiSelectOptions";
 
 export default function MoreOptions(props) {
 	const [value, setValue] = useState(props.task.getValue());
+	const [task, setTask] = useState(props.task);
+
+	// keeping track of tags
+	const [selected, setSelected] = useState(props.task.tags);
+	const [available, setAvailable] = useState();
 
 	useEffect(() => {
-		return () => {
-			// props.handleAnyTaskUpdate(props.task.getID(), {});
-		};
-	});
+		setTask((prevState) => ({ ...prevState, value: value }));
+	}, [value]);
+
+	const handleSave = () => {
+		props.handleTaskValueUpdate(task);
+	};
 
 	return (
 		<div>
@@ -26,9 +34,12 @@ export default function MoreOptions(props) {
 						<button className="close" onClick={close}>
 							&times;
 						</button>
-						<div className="header"> Modal Title </div>
+						<div className="header">Edit Task </div>
 						<div className="content">
-							<form onSubmit={(event) => event.preventDefault()}>
+							<form
+								className="input"
+								onSubmit={(event) => event.preventDefault()}
+							>
 								<input
 									type="text"
 									value={value}
@@ -37,6 +48,7 @@ export default function MoreOptions(props) {
 									}}
 								/>
 							</form>
+							<MultiSelectOptions className="tags" />
 						</div>
 						<div className="actions">
 							<Popup
@@ -51,6 +63,15 @@ export default function MoreOptions(props) {
 									ratione sapiente! Laudantium, aperiam doloribus. Odit, aut.
 								</span>
 							</Popup>
+							<button
+								className="save"
+								onClick={() => {
+									handleSave();
+									close();
+								}}
+							>
+								Save
+							</button>
 							<button
 								className="button"
 								onClick={() => {

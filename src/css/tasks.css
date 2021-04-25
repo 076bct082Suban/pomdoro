@@ -13,9 +13,12 @@
 	vertical-align: middle;
 	float: left;
 	position: relative;
-	height: 1.5em;
+	/* height: 1.5em; */
 }
 
+.more-options {
+	vertical-align: middle;
+}
 .value {
 	flex: 10;
 	margin-top: 0;
