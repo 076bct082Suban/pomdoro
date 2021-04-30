@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Popup from "reactjs-popup";
 import modifyTag from "./images/modifyTag.svg";
 import "./css/MultiSelectOptions.css";

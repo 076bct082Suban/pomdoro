@@ -79,12 +79,18 @@ function Taskbar(props) {
 					type="checkbox"
 					className="task-checkbox"
 					onChange={() => {
-						props.handleClick(props.task.getID());
+						props.handleClick(props.task.id);
 						props.clearActiveTask();
 					}}
 				/>
-				<p className="value">{props.task.getValue()}</p>
-				<MoreOptions task={props.task} />
+				<p className="value">{props.task.value}</p>
+				<MoreOptions
+					task={props.task}
+					handleTaskValueUpdate={props.handleTaskValueUpdate}
+					className="more-options"
+					updateTags={props.updateTags}
+					tags={props.tags}
+				/>
 				<img
 					src={crossButton}
 					alt="cross button"

@@ -6,7 +6,7 @@ import img from "./images/moreOptions.svg";
 import MultiSelectOptions from "./MultiSelectOptions";
 
 export default function MoreOptions(props) {
-	const [value, setValue] = useState(props.task.getValue());
+	const [value, setValue] = useState(props.task.value);
 	const [task, setTask] = useState(props.task);
 
 	// keeping track of tags

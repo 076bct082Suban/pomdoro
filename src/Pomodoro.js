@@ -175,8 +175,10 @@ export default class Pomodoro extends React.Component {
 		const index = tasks.findIndex((obj) => task.id === obj.id);
 		console.log(index);
 		console.log(task);
-
 		tasks[index] = new Task(task.id, task.value, task.tags, task.completed);
+		if (task.id === this.state.task.id) {
+			this.setState({ task: task });
+		}
 		this.setState({ unfinishedTasks: tasks });
 
 		fetch("http://localhost:5000/api/tasks", {
@@ -295,6 +297,9 @@ export default class Pomodoro extends React.Component {
 						task={this.state.task}
 						clearActiveTask={() => this.clearActiveTask()}
 						handleClick={(id) => this.handleCheckboxClick(id)}
+						handleTaskValueUpdate={(task) => this.handleTaskValueUpdate(task)}
+						updateTags={(tag) => this.updateTags(tag)}
+						tags={this.state.tags}
 					/>
 				)}
 				<Timer
