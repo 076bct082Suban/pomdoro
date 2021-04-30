@@ -26,6 +26,7 @@ function Tasks(props) {
 						handleTaskSet={(task) => props.handleTaskSet(task)}
 						handleTaskValueUpdate={props.handleTaskValueUpdate}
 						updateTags={props.updateTags}
+						tags={props.tags}
 					/>
 				))}
 			</div>
@@ -54,6 +55,7 @@ function TaskRow(props) {
 					handleTaskValueUpdate={props.handleTaskValueUpdate}
 					className="more-options"
 					updateTags={props.updateTags}
+					tags={props.tags}
 				/>
 
 				<img

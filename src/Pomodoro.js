@@ -36,8 +36,8 @@ export default class Pomodoro extends React.Component {
 		// this.handleTaskClick = this.handleClick.bind(this);
 	}
 	componentDidMount() {
-		this.handleTaskUpdate();
 		this.getTags();
+		this.handleTaskUpdate();
 	}
 	async sendPom() {
 		let obj = this.state.pom;
@@ -178,16 +178,42 @@ export default class Pomodoro extends React.Component {
 
 		tasks[index] = new Task(task.id, task.value, task.tags, task.completed);
 		this.setState({ unfinishedTasks: tasks });
+
+		fetch("http://localhost:5000/api/tasks", {
+			method: "PUT",
+			mode: "cors",
+			credentials: "same-origin",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				type: "modify",
+				id: task.id,
+				task: task,
+			}),
+		}).then(() => console.log("weyyy"));
 	}
 
 	getTags() {
-		fetch("http://localhost:5000/api/tags").then((res) =>
-			res.json().then((result) => this.setState({ tags: result.tags }))
-		);
+		let tags = [];
+		fetch("http://localhost:5000/api/tags")
+			.then((res) => res.json())
+			.then((result) => {
+				console.log(result);
+				result.forEach((object) => tags.push(object));
+				this.setState({ tags: tags });
+			});
 	}
 
 	updateTags(tag) {
-		this.state.tags.push(tag);
+		this.state.tags.forEach((obj) => {
+			console.log(tag.id);
+			console.log(obj.id);
+			if (tag.id === obj.id) {
+				console.log("dublicate");
+				return;
+			} else this.state.tags.push(tag);
+		});
 	}
 	// Pomodoro functions
 	handleClick() {
@@ -290,6 +316,7 @@ export default class Pomodoro extends React.Component {
 					unfinishedTasks={this.state.unfinishedTasks}
 					handleTaskSet={(task) => this.handleTaskSet(task)}
 					task={this.state.task}
+					tags={this.state.tags}
 					clearActiveTask={() => this.clearActiveTask()}
 					handleCheckboxClick={(id) => this.handleCheckboxClick(id)}
 					handleTaskValueUpdate={(task) => this.handleTaskValueUpdate(task)}

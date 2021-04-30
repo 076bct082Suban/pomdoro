@@ -10,12 +10,22 @@ export default function MoreOptions(props) {
 	const [task, setTask] = useState(props.task);
 
 	// keeping track of tags
+	// console.log(props.task.tags);
+	// console.log(props.tags);
 	const [selected, setSelected] = useState(props.task.tags);
-	const [available, setAvailable] = useState();
+	const [available, setAvailable] = useState(props.tags);
 
 	useEffect(() => {
 		setTask((prevState) => ({ ...prevState, value: value }));
 	}, [value]);
+
+	useEffect(() => {
+		setTask((prevState) => ({ ...prevState, tags: selected }));
+	}, [selected]);
+
+	// useEffect(() => {
+	// 	props.updateTags(available[available.length - 1]);
+	// }, [available]);
 
 	const handleSave = () => {
 		props.handleTaskValueUpdate(task);
@@ -48,7 +58,13 @@ export default function MoreOptions(props) {
 									}}
 								/>
 							</form>
-							<MultiSelectOptions className="tags" />
+							<MultiSelectOptions
+								className="tags"
+								available={available}
+								setAvailable={(state) => setAvailable(state)}
+								selected={selected}
+								setSelected={(state) => setSelected(state)}
+							/>
 						</div>
 						<div className="actions">
 							<Popup

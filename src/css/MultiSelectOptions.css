@@ -10,3 +10,12 @@
 	padding: 4px;
 	margin: 2px;
 }
+.tag-delete-box {
+	display: flex;
+	align-items: center;
+}
+
+.option-row {
+	display: flex;
+	justify-content: space-between;
+}
